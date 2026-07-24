@@ -1,6 +1,8 @@
 #pragma once
 
+#include <mbgl/gfx/drawable.hpp>
 #include <mbgl/renderer/query.hpp>
+#include <functional>
 #include <mbgl/annotation/annotation.hpp>
 #include <mbgl/util/geo.hpp>
 #include <mbgl/util/geojson.hpp>
@@ -120,6 +122,12 @@ public:
 #if MLN_RENDER_BACKEND_OPENGL
     void enableAndroidEmulatorGoldfishMitigation(bool enable);
 #endif
+
+    /// Walk all drawables with exported data.
+    using DrawableVisitor = std::function<void(
+        const std::string& shaderName,
+        const gfx::Drawable::ExportedData& data)>;
+    void visitDrawables(const DrawableVisitor& visitor) const;
 
 private:
     class Impl;

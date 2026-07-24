@@ -103,6 +103,14 @@ if(MLN_WITH_METAL)
     )
 endif()
 
+if(MLN_WITH_COMMAND_EXPORT)
+    target_sources(
+        mbgl-core
+        PRIVATE
+            ${PROJECT_SOURCE_DIR}/platform/default/src/mbgl/command_export/headless_backend.cpp
+    )
+endif()
+
 include(${PROJECT_SOURCE_DIR}/vendor/icu.cmake)
 
 set(CMAKE_OBJC_FLAGS "-fobjc-arc")

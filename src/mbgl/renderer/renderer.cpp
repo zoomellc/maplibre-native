@@ -1,4 +1,6 @@
 #include <mbgl/renderer/renderer.hpp>
+#include <mbgl/renderer/layer_group.hpp>
+#include <mbgl/shaders/shader_defines.hpp>
 
 #include <mbgl/annotation/annotation_manager.hpp>
 #include <mbgl/gfx/backend_scope.hpp>
@@ -174,5 +176,23 @@ void Renderer::enableAndroidEmulatorGoldfishMitigation(bool enable) {
     impl->orchestrator.enableAndroidEmulatorGoldfishMitigation(enable);
 }
 #endif
+
+void Renderer::visitDrawables(const DrawableVisitor& visitor) const {
+    impl->orchestrator.visitLayerGroups([&](LayerGroupBase& layerGroup) {
+        const auto& layerUbos = layerGroup.getUniformBuffers();
+
+        visitLayerGroupDrawables(layerGroup, [&](gfx::Drawable& drawable) {
+            const auto& shader = drawable.getShader();
+            if (!shader) return;
+
+            // Merge layer UBO cpuData into drawable's cpuCopies
+            drawable.mutableUniformBuffers().copyCpuDataFrom(layerUbos);
+
+            gfx::Drawable::ExportedData data;
+            drawable.exportData(data);
+            visitor(drawable.getName(), data);
+        });
+    });
+}
 
 } // namespace mbgl
