@@ -102,6 +102,15 @@ TEST(Shaping, ZWSP) {
         ASSERT_EQ(shaping.right, 0);
         ASSERT_EQ(shaping.writingMode, WritingModeType::Horizontal);
     }
+
+    // Explicit newlines are already included in the BiDi line ranges. Export
+    // exactly one separator between shaped lines for platform text consumers.
+    {
+        TaggedString string(u"中\n中", sectionOptions);
+        auto shaping = testGetShaping(string, 5);
+        ASSERT_EQ(shaping.positionedLines.size(), 2);
+        ASSERT_EQ(shaping.lineBrokenText, u"中\n中");
+    }
 }
 
 void setupShapedText(Shaping& shapedText, float textSize) {
