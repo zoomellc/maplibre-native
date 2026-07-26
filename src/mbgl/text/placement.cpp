@@ -1397,6 +1397,7 @@ void Placement::newSymbolPlaced(const SymbolInstance& symbol,
 
     PlacedSymbolData symbolData{
         .key = symbol.getKey(),
+        .lineBrokenText = symbol.getLineBrokenText(),
         .crossTileID = symbol.getCrossTileID(),
         .textCollisionBox = textGeometry.bounds,
         .iconCollisionBox = iconGeometry.bounds,
@@ -1757,6 +1758,7 @@ void TilePlacement::newSymbolPlaced(const SymbolInstance& symbol,
     }
     PlacedSymbolData symbolData{
         .key = symbol.getKey(),
+        .lineBrokenText = symbol.getLineBrokenText(),
         .crossTileID = symbol.getCrossTileID(),
         .textCollisionBox = textCollisionBox,
         .iconCollisionBox = iconCollisionBox,
